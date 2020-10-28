@@ -1,12 +1,12 @@
 // LIFAP6 - Automne 2017 - R. Chaine
 
 #include "element.cpp"
-#include "liste.cpp"
+#include "ListeTriee.cpp"
 #include <cstdio>
 
 int main()
-{
-  Liste lili;
+{ /*
+  ListeTriee lili;
   std::printf("Lili\n");
   lili.affichage();
   for(int i=5;i>1;i--)
@@ -17,7 +17,7 @@ int main()
     lili.ajoutEnQueue(i);
   std::printf("Lili\n");
   lili.affichage();
-  Liste lolo(lili);
+  ListeTriee lolo(lili);
   std::printf("Lolo\n");
   lolo.affichage();
 //  lili.vide();
@@ -25,6 +25,8 @@ int main()
   lolo.affichage();
   lolo=lili;
   printf("Lolo\n");
-  lolo.affichage();
+  lolo.affichage(); */
+
+// refaire un main qui teste les skip-lists
   return 0;
 }

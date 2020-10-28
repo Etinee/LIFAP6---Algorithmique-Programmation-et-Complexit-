@@ -11,14 +11,14 @@ class ListeTriee;
 
 class Cellule
 {
-    friend class ListeTriee
-            ;
+    friend class ListeTriee;
+    Cellule();
     Cellule(Elem info, int nbNiveaux);
 
 private :
     Elem info;
-    Cellule *niveaux;
     int nbNiveaux;
+    Cellule **niveaux;
 
 };
 
@@ -44,9 +44,7 @@ public :
     ();
 
     //Affectation---------------------------------------------------------------
-//    ListeTriee
-//    & operator = (const ListeTriee
-//    & l);
+    //ListeTriee & operator = (const ListeTriee & l);
     //Precondition : aucune
     //               (la ListeTriee
     //               a affecter et l initialisees et manipulees uniquement
@@ -96,30 +94,16 @@ public :
     // *this
     //Resultat : valeur de l'Elem contenu dans la Cellule
 
- //   void affichage() const;
-    //Precondition : aucune
-    //               (*this initialisee et manipulee uniquement a travers les
-    //                operations du module)
-    //Postcondition : Affichage exhaustif de tous les elements de *this
+
 
     void affichageNiveaux(int n) const;
     //Precondition : aucune
     // n correspond au niveau qu'on veut afficher
-    //Postcondition : Affichage exhaustif de tous les éléments de *this sur plusieurs niveaux
+    //Postcondition : Affichage exhaustif des éléments de *this au niveau n
 
-    void affichageSecondNiveau() const;
+    void insererElement(const Elem &e);
 
-
-    void ajoutEnTete(const Elem & e);
-    //Precondition : aucune
-    //               (*this et e initialises et manipules uniquement a travers les
-    //                operations de leurs modules respectifs)
-    //Postcondition : L'Elem e est ajoute en tete de *this
-
-    void suppressionEnTete();
-    //Precondition : this->testVide()==false
-    //Postcondition : la ListeTriee
-    // *this perd son premier element
+    void supprimerElement(Elem &e);
 
     void vide();
     //Precondition : aucune
@@ -127,14 +111,6 @@ public :
     //                operations du module)
     //Postcondition : this->testVide()==true
 
-    void ajoutEnQueue(const Elem & e);
-    //Precondition : aucune
-    //               (*this et e initialises et manipules uniquement a travers les
-    //                operations de leurs modules respectifs)
-    //Precondition : L'Elem e est ajoute en fin de la ListeTriee
-    // *this
-
-    //OPERATIONS QUI POURRAIENT ETRE AJOUTEES AU MODULE
 
     Cellule * rechercheElement(const Elem & e) const;
     //Precondition : aucune
@@ -145,20 +121,14 @@ public :
     //           *this pourrait ensuite etre modifiee a travers
     //           la connaissance de l'adresse d'une de ses cellules
 
-    void insereElementApresCellule(const Elem & e,Cellule *c);
-    //Precondition : c adresse valide d'une Cellule de la ListeTriee
-    // *this
-    //               ou 0 si this->testVide()==true
-    //Postcondition : l'element e est insere apres la Cellule pointee par c
 
-    void modifieInfoCellule(const Elem & e,Cellule *c);
-    //Precondition : *this non vide et c adresse valide d'une Cellule de *this
-    //Postcondition : l'info contenue dans *c a pour valeur e
 private :
-    void ajoutEnQueueConnaissantUneCellule(const Elem & e, Cellule *c);
-    void affichageDepuisCellule(const Cellule * c) const;
+
     //Donnees membres-----------------------------------------------------------
     Cellule *ad;
+
+
+
 };
 
 

@@ -1,24 +1,52 @@
-#include <cstdio>
 #include "ListeTriee.h"
 #include <iostream>
 
 using namespace std;
 
 //Constructeurs-------------------------------------------------------------
-Cellule::Cellule(Elem info, int nbNiveaux)
+Cellule::Cellule(Elem i, int nbNiv)
 {
-    niveaux= new Cellule [nbNiveaux];
+    info = i;
+    nbNiveaux=nbNiv;
+    niveaux = new Cellule * [nbNiveaux];
 }
+
+Cellule::Cellule() {
+    info = 0;
+    nbNiveaux = 0;
+    niveaux = new Cellule * [nbNiveaux];
+}
+
+
+//Affectation---------------------------------------------------------------
+/*ListeTriee & ListeTriee::operator = (const ListeTriee & l)
+{
+    ad->info = l.ad->info;
+    ad->niveaux = l.ad->niveaux;
+    ad->nbNiveaux = l.ad->nbNiveaux;
+    return *this;
+} */
+//ON VERRA PLUS TARD
+//Precondition : aucune
+//               (la ListeTriee a affecter et l initialisees et manipulees uniquement
+//               a travers les operations du module)
+//Postcondition : la ListeTriee affectee et l correspondent a des ListeTriees identiques
+//                (mais elles sont totalement independantes l'une de l'autre)
 
 ListeTriee::ListeTriee()
 {
     ad = new Cellule;
     ad->info= 1; //valeur bidon, c'est la cellule bidon
+
 }
 //Postcondition : la ListeTriee initialisee est vide
 ListeTriee::ListeTriee(const ListeTriee & l)
 {
-    //  *ad = l; //on reverra après
+    ad = new Cellule;
+    ad->info = l.ad->info;
+    ad->niveaux = l.ad->niveaux;
+    ad->nbNiveaux = l.ad->nbNiveaux;
+
 }
 //Postcondition : la ListeTriee initialisee et l correspondent a des ListeTriees identiques
 //                (mais elles sont totalement independantes l'une de l'autre)
@@ -26,27 +54,19 @@ ListeTriee::ListeTriee(const ListeTriee & l)
 //Destructeur---------------------------------------------------------------
 ListeTriee::~ListeTriee()
 {
-    while(ad->suivant!=nullptr){
-        Cellule *next = ad->suivant;
+    while(ad->niveaux[0]!=nullptr){
+        Cellule *next = ad->niveaux[0];
         delete ad;
         ad=next;
     }
 }
 
-//Affectation---------------------------------------------------------------
-/*  ListeTriee & ListeTriee::operator = (const ListeTriee & l)
-  {
-
-  }*/
-//Precondition : aucune
-//               (la ListeTriee a affecter et l initialisees et manipulees uniquement
-//               a travers les operations du module)
-//Postcondition : la ListeTriee affectee et l correspondent a des ListeTriees identiques
-//                (mais elles sont totalement independantes l'une de l'autre)
 
 bool ListeTriee::testVide() const
 {
-    return ad->niveaux[0]==nullptr;
+    //return ad == nullptr;
+    //si on veut tester si la liste ne contient que la cellule bidon et qu'elle est ensuite vide :
+    return ad->niveaux[0] == nullptr;
 }
 //Precondition : aucune
 //               (*this initialisee et manipulee uniquement a travers les
@@ -69,11 +89,13 @@ void ListeTriee::etablissementNiveaux()
     Cellule *itbis=ad;
     bool niveauSuivant = true;
     while (it->niveaux[0] != nullptr){
+        int i = 1;
         while(niveauSuivant == true){
             niveauSuivant = rand()%2;
-            if(NiveauSuivant == true){
+            if(niveauSuivant == true){
                 itbis->niveaux[i]=it;
                 itbis=it;
+                i ++;
             }
         }
         it=it->niveaux[0];
@@ -91,13 +113,12 @@ Elem ListeTriee::premierElement() const
 //Resultat : valeur de l'Elem contenu dans la 1ere Cellule
 
 Cellule * ListeTriee::premiereCellule() const
-{/*
-      if(!ad->testVide()){
-        return ad;
+{
+      if(!this->testVide()){
+        return ad->niveaux[0];
       }else{
         return nullptr;
-      }*/
-    return nullptr;
+      }
 }
 //Precondition : aucune
 //               (*this initialisee et manipulee uniquement a travers les
@@ -108,13 +129,12 @@ Cellule * ListeTriee::premiereCellule() const
 //           la connaissance de l'adresse de sa premiere cellule
 
 Cellule * ListeTriee::celluleSuivante(const Cellule *c) const
-{ /*
-      if(c->suivant!=nullptr){
-        return c->suivant;
+{
+      if(c->niveaux[0]!=nullptr){
+        return c->niveaux[0];
       }else{
         return nullptr;
-      }*/
-    return nullptr;
+      }
 }
 //Precondition : c adresse valide d'une Cellule de la ListeTriee *this
 //Resultat : adresse de la cellule suivante si elle existe
@@ -129,34 +149,25 @@ Elem ListeTriee::elementCellule(const Cellule * c) const
 }
 //Precondition : c adresse valide d'une Cellule de la ListeTriee *this
 //Resultat : valeur de l'Elem contenu dans la Cellule
-/*
-void ListeTriee::affichage() const
-{
-    std::printf("ListeTriee (it) ");
-    Cellule *it=ad->niveaux[0];
-    while(it!=nullptr){
-        affichageElement(it->info);
-        it=it->suivant;
-    }
-    std::putchar('\n');
-}*/
 
-//Precondition : aucune
-//               (*this initialisee et manipulee uniquement a travers les
-//                operations du module)
-//Postcondition : Affichage exhaustif de tous les elements de *this
+
 
 void ListeTriee::affichageNiveaux(int n) const {
-    std::printf("ListeTriee (it) ");
+    cout<<"ListeTriee : ";
     Cellule *it=ad->niveaux[n];
     while(it!=nullptr){
         affichageElement(it->info);
         it=it->niveaux[n];
+        cout<<", ";
     }
-    std::putchar('\n');
+    cout<<endl;
 }
+//Precondition : aucune
+//               (*this initialisee et manipulee uniquement a travers les
+//                operations du module)
+//Postcondition : Affichage exhaustif des elements de *this au niveau n
 
-void ListeTriee::ajoutEnTete(const Elem & e)
+void ListeTriee::insererElement(const Elem & e)
 {
     Cellule *c = new Cellule;
     c->info=e;
@@ -166,37 +177,31 @@ void ListeTriee::ajoutEnTete(const Elem & e)
 //Precondition : aucune
 //               (*this et e initialises et manipules uniquement a travers les
 //                operations de leurs modules respectifs)
-//Postcondition : L'Elem e est ajoute en tete de *this
+//Postcondition : L'Elem e est ajoute dans *this du niveau 0 jusqu'au dernier niveau où il est à true, et est trié.
 
-void ListeTriee::suppressionEnTete()
+void ListeTriee::supprimerElement(Elem & e)
 {
 
 }
 //Precondition : this->testVide()==false
-//Postcondition : la ListeTriee *this perd son premier element
+//Postcondition : la ListeTriee *this perd l'element e
 
 void ListeTriee::vide()
 {
-
+    ad->niveaux[0]= nullptr;
+    //chui pas sûre
 }
 //Precondition : aucune
 //               (*this initialisee et manipulee uniquement a travers les
 //                operations du module)
 //Postcondition : this->testVide()==true
 
-void ListeTriee::ajoutEnQueue(const Elem & e)
-{
-
-}
-//Precondition : aucune
-//               (*this et e initialises et manipules uniquement a travers les
-//                operations de leurs modules respectifs)
-//Precondition : L'Elem e est ajoute en fin de la ListeTriee *this
 
 //OPERATIONS QUI POURRAIENT ETRE AJOUTEES AU MODULE
 
 Cellule * ListeTriee::rechercheElement(const Elem & e) const
 {
+    //on va devoir y réfléchir dans la prochaine question
     return nullptr;
 }
 //Precondition : aucune
@@ -206,28 +211,3 @@ Cellule * ListeTriee::rechercheElement(const Elem & e) const
 //           Attention : la ListeTriee *this pourrait ensuite etre modifiee a travers
 //           la connaissance de l'adresse d'une de ses cellules
 
-void ListeTriee::insereElementApresCellule(const Elem & e,Cellule *c)
-{
-
-}
-//Precondition : c adresse valide d'une Cellule de la ListeTriee *this
-//               ou 0 si this->testVide()==true
-//Postcondition : l'element e est insere apres la Cellule pointee par c
-
-void ListeTriee::modifieInfoCellule(const Elem & e,Cellule *c)
-{
-
-}
-//Precondition : *this non vide et c adresse valide d'une Cellule de *this
-//Postcondition : l'info contenue dans *c a pour valeur e
-
-void ListeTriee::ajoutEnQueueConnaissantUneCellule(const Elem & e, Cellule *c)
-{
-
-}
-
-void ListeTriee::affichageDepuisCellule(const Cellule * c) const
-{
-
-}
-//Donnees membres-----------------------------------------------------------

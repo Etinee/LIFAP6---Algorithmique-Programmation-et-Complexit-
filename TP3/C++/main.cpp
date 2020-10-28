@@ -2,7 +2,8 @@
 
 #include "element.cpp"
 #include "ListeTriee.cpp"
-#include <cstdio>
+
+using namespace std;
 
 int main()
 { /*
