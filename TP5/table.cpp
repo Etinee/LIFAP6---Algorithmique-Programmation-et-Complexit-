@@ -33,7 +33,7 @@ int Table::rechercheCle(unsigned int cle) const {
     if(t[i].cle==cle){
         return i;
     }else{
-        int j = 1; //permet de compter le nombre d'essais. On considère que lorsque qu'on a essayé autant de fois qu'il y a de case dans la table, on a essayé toutes les cases et donc la clé n'est pas présente
+        int j = 2; //permet de compter le nombre d'essais. On considère que lorsque qu'on a essayé autant de fois qu'il y a de case dans la table, on a essayé toutes les cases et donc la clé n'est pas présente
         i = pfRehachage(cle, j, tailleTable);
         while (t[i].cle != cle && t[i].cle!=0 && j<tailleTable){
             i = pfRehachage(i, j, tailleTable);
@@ -60,15 +60,15 @@ void Table::insererCle(unsigned int cle, double infoAssociee) {
             t[pfHachage(cle, tailleTable)].infoAssociee=infoAssociee;
             t[pfHachage(cle, tailleTable)].nbEssais = 1;
             tailleUtilisee ++;
-           // cout<<"réussi au premier essai"<<endl;
+            //cout<<"réussi au premier essai"<<endl;
 
         }else{ //si y a des collisions
 
-           // cout<<"re hachage"<<endl;
+           //cout<<"re hachage"<<endl;
 
             int nbEssais = 2; //le premier au dessus, le second juste en dessous et ensuite si c'est toujours pas bon on entre dans la boucle
             int i = pfRehachage(cle, nbEssais, tailleTable); //fourni le point de re hachage, i est le nouvel indice
-            while (t[i].cle!=0){ //tant que l'indice correspond à une case de la table non vide
+            while (t[i].cle!=0 && t[i].cle!=cle){ //tant que l'indice correspond à une case de la table non vide
                 nbEssais ++;
                 i = pfRehachage(i, nbEssais, tailleTable); //on avance le pas de hachage
             }
