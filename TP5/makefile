@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -Wall
 EXEC_NAME = main
 INCLUDES =
-LIBS = Table.h element.h
+LIBS = table.h
 OBJ_FILES = main.o
 INSTALL_DIR = /usr/bin
 
