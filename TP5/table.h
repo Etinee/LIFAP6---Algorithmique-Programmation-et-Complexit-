@@ -24,18 +24,23 @@ public:
     Table();
     Table(int taille, int (*pfh)(unsigned int, int), int (*pfrh)(int, int, int));
 
+
+// Destructeur ---------------------------------------------------------------------------------------------------------
+
+    ~Table();
+
 // fonctions sur les clés ----------------------------------------------------------------------------------------------
 
-    int rechercheCle(unsigned int cle) const;
+    int rechercheCle(const unsigned int cle) const;
     //Post Condition :
     //      renvoie l'indice de l'emplacement de la clé
 
-    void insererCle(unsigned int cle, double infoAssociee);
+    void insererCle(const unsigned int cle, const double infoAssociee);
     //Post Condition :
     //      la clé passé en paramètre est insérer dans le tableau
     //      tailleUtilisee ++
 
-    void supprimerCle(unsigned int cle);
+    void supprimerCle(const unsigned int cle);
     //Post Condition :
     //      la case où était contenue la clé est maintenant vide
     //      tailleUtilisee --
@@ -51,11 +56,11 @@ public:
 
 // fonctions sur l'information associée --------------------------------------------------------------------------------
 
-    double informationAssociee(unsigned int cle) const;
+    double informationAssociee(const unsigned int cle) const;
     //Post Condition :
     //      renvoie l'information associée à la clé
 
-    void modifierInfoAssociee(unsigned int cle, double newInfo);
+    void modifierInfoAssociee(const unsigned int cle, const double newInfo);
     //Post Condition :
     //      modifie l'information associée à la clé par la nouvelle information passée en paramètre
 

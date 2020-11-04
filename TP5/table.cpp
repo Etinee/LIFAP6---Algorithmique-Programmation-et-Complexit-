@@ -26,7 +26,7 @@ Table::Table(int taille, int (*pfh)(unsigned int, int), int (*pfrh)(int, int, in
 
 // fonctions sur les clés ----------------------------------------------------------------------------------------------
 
-int Table::rechercheCle(unsigned int cle) const {
+int Table::rechercheCle(const unsigned int cle) const {
 //j'aurais voulu exploiter nbEssais pour faire un for mais cette donnée est rangée dans le tableau, donc sans l'indice du
 //tableau on ne peut pas avoir accès à cette variable, et je ne vois pas où la ranger ailleurs
     int i = pfHachage(cle, tailleTable);
@@ -51,14 +51,14 @@ int Table::rechercheCle(unsigned int cle) const {
 //      renvoie l'indice de l'emplacement de la clé
 //      renvoie -1 si la clé n'est pas présente
 
-void Table::insererCle(unsigned int cle, double infoAssociee) {
+void Table::insererCle(const unsigned int cle, const double infoAssociee) {
 
     if(tailleUtilisee < tailleTable){
-
-        if(t[pfHachage(cle, tailleTable)].cle==0){ //si tout va bien et qu'il y a pas de collision
-            t[pfHachage(cle, tailleTable)].cle=cle;
-            t[pfHachage(cle, tailleTable)].infoAssociee=infoAssociee;
-            t[pfHachage(cle, tailleTable)].nbEssais = 1;
+        int i = pfHachage(cle, tailleTable);
+        if(t[i].cle==0){ //si tout va bien et qu'il y a pas de collision
+            t[i].cle=cle;
+            t[i].infoAssociee=infoAssociee;
+            t[i].nbEssais = 1;
             tailleUtilisee ++;
             //cout<<"réussi au premier essai"<<endl;
 
@@ -67,10 +67,10 @@ void Table::insererCle(unsigned int cle, double infoAssociee) {
            //cout<<"re hachage"<<endl;
 
             int nbEssais = 2; //le premier au dessus, le second juste en dessous et ensuite si c'est toujours pas bon on entre dans la boucle
-            int i = pfRehachage(cle, nbEssais, tailleTable); //fourni le point de re hachage, i est le nouvel indice
-            while (t[i].cle!=0 && t[i].cle!=cle){ //tant que l'indice correspond à une case de la table non vide
+            int pasReHachage = pfRehachage(cle, nbEssais, tailleTable); //fourni le point de re hachage, i est le nouvel indice
+            while (t[pasReHachage].cle!=0 && t[pasReHachage].cle!=cle){ //tant que l'indice correspond à une case de la table non vide
                 nbEssais ++;
-                i = pfRehachage(i, nbEssais, tailleTable); //on avance le pas de hachage
+                pasReHachage = pfRehachage(pasReHachage, nbEssais, tailleTable); //on avance le pas de hachage
             }
             t[i].cle=cle;
             t[i].infoAssociee=infoAssociee;
@@ -87,7 +87,7 @@ void Table::insererCle(unsigned int cle, double infoAssociee) {
 //      la clé passé en paramètre est insérer dans le tableau
 //      tailleUtilisee ++
 
-void Table::supprimerCle(unsigned int cle) {
+void Table::supprimerCle(const unsigned int cle) {
     int i = rechercheCle(cle);
     if(i != -1){
         t[i].cle= 0;
@@ -103,11 +103,15 @@ void Table::supprimerCle(unsigned int cle) {
 // fonctions sur la table ----------------------------------------------------------------------------------------------
 
 void Table::afficherTable() const {
-    cout<<"affichage de la table : "<<endl;
+    int somme = 0;
     for(int i = 0; i < tailleTable; i++){
         if(t[i].cle!=0){
             cout<<"cle "<<i<<" : "<<t[i].cle<<" nombre d'essais : "<<t[i].nbEssais<<endl;
         }
+        somme += t[i].cle;
+    }
+    if(somme == 0){
+        cout<<"la table est vide"<<endl;
     }
 }
 // Post Condition :
@@ -117,7 +121,7 @@ void Table::afficherTable() const {
 
 // fonctions sur l'information associée --------------------------------------------------------------------------------
 
-double Table::informationAssociee(unsigned int cle) const {
+double Table::informationAssociee(const unsigned int cle) const {
     int i = rechercheCle(cle);
     if(i!=-1){
         return t[i].infoAssociee;
@@ -129,7 +133,7 @@ double Table::informationAssociee(unsigned int cle) const {
 //      renvoie l'information associée à la clé
 //      renvoie -1 si la clé n'est pas présente dans le tableau
 
-void Table::modifierInfoAssociee(unsigned int cle, double newInfo){
+void Table::modifierInfoAssociee(const unsigned int cle, const double newInfo){
     int i = rechercheCle(cle);
     if(i!=-1){
         t[i].infoAssociee=newInfo;
@@ -143,11 +147,11 @@ void Table::modifierInfoAssociee(unsigned int cle, double newInfo){
 
 //je n'ai pas fait les fonctions extractionBits et compression car je ne sais pas comment on manipule les codes binaires
 
-int modulo(unsigned int cle, int m){
+int modulo(const unsigned int cle, const int m){
     return cle%m;
 }
 
-int multiplication(unsigned int cle, int m){
+int multiplication(const unsigned int cle, const int m){
     double x = cle*0.61;
     int y = (int)(x*100)%100;
     x = (double)y/100;
@@ -156,15 +160,15 @@ int multiplication(unsigned int cle, int m){
 
 // fonctions de rehachage --------------------------------------------------------------------------------------------
 
-int lineaire(int x, int nbEssais, int m){
+int lineaire(const int x, const int nbEssais, const int m){
     return (x+1)%m;
 }
 
-int quadratique(int x, int nbEssais, int m){
+int quadratique(const int x, const int nbEssais, const int m){
     return (x+2*nbEssais+1)%m;
 }
 
-int doubleHachage(int x, int nbEssais, int m){
+int doubleHachage(const int x, const int nbEssais, const int m){
     //je n'ai pas compris comment cette fonction procède.
     return x;
 }
